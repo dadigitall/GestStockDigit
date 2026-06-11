@@ -167,6 +167,27 @@ new class extends Component
             Rapports
         </x-nav-link-sidebar>
 
+        <x-nav-link-sidebar :href="route('users.index')" :active="request()->routeIs('users.*')" wire:navigate>
+            <x-slot:icon>
+                <svg class="lucide lucide-users w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                    <path d="M16 3.128a4 4 0 0 1 0 7.744" />
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                    <circle cx="9" cy="7" r="4" />
+                </svg>
+            </x-slot>
+            Utilisateurs
+        </x-nav-link-sidebar>
+
+        <x-nav-link-sidebar :href="route('roles.index')" :active="request()->routeIs('roles.*')" wire:navigate>
+            <x-slot:icon>
+                <svg class="lucide lucide-shield w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+                </svg>
+            </x-slot>
+            Rôles & Permissions
+        </x-nav-link-sidebar>
+
         <div class="text-[10px] uppercase tracking-widest text-slate-400 px-3 mb-2 mt-6 font-semibold">Système</div>
 
         @can('manage companies')

@@ -5,7 +5,9 @@ use App\Livewire\Pages\Entrepots\Index as EntrepotsIndex;
 use App\Livewire\Pages\Magasins\Index as MagasinsIndex;
 use App\Livewire\Pages\Products\Form;
 use App\Livewire\Pages\Products\Index;
+use App\Livewire\Pages\Roles\Index as RolesIndex;
 use App\Livewire\Pages\Stores\Show;
+use App\Livewire\Pages\Users\Index as UsersIndex;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -28,6 +30,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('stock', App\Livewire\Pages\Stock\Index::class)->name('stock.index');
     Route::get('reports', App\Livewire\Pages\Reports\Index::class)->name('reports.index');
     Route::get('settings', App\Livewire\Pages\Settings\Index::class)->name('settings.index');
+    Route::get('users', UsersIndex::class)->name('users.index');
+    Route::get('roles', RolesIndex::class)->name('roles.index');
     Route::get('companies', App\Livewire\Pages\Companies\Index::class)->name('companies.index');
     Route::get('support', App\Livewire\Pages\Support\Index::class)->name('support.index');
     Route::view('profile', 'profile')->name('profile');
