@@ -35,6 +35,10 @@ class Index extends Component
 
     public $timezone;
 
+    public $date_format;
+
+    public $locale;
+
     public $logo;
 
     public $tempLogo;
@@ -88,6 +92,8 @@ class Index extends Component
             'website' => $this->company->website,
             'currency' => $this->company->currency,
             'timezone' => $this->company->timezone,
+            'date_format' => $this->company->date_format,
+            'locale' => $this->company->locale,
             'invoice_prefix' => $this->company->invoice_prefix,
             'sale_prefix' => $this->company->sale_prefix,
             'purchase_prefix' => $this->company->purchase_prefix,
@@ -125,6 +131,8 @@ class Index extends Component
             'address' => 'nullable|string|max:500',
             'currency' => 'required|string|size:3',
             'timezone' => 'required|string|max:100',
+            'date_format' => 'required|string|max:20',
+            'locale' => 'required|string|max:10',
             'tempLogo' => 'nullable|image|max:2048',
         ]);
 
@@ -143,6 +151,8 @@ class Index extends Component
             'address' => $this->address,
             'currency' => $this->currency,
             'timezone' => $this->timezone,
+            'date_format' => $this->date_format,
+            'locale' => $this->locale,
             'logo' => $this->company->logo,
         ]);
 
