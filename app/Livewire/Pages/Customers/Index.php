@@ -2,23 +2,32 @@
 
 namespace App\Livewire\Pages\Customers;
 
+use App\Models\Customer;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Customer;
 
 class Index extends Component
 {
     use WithPagination;
 
     public $search = '';
+
     public $showForm = false;
+
     public $editingCustomer = null;
+
     public $name;
+
     public $phone;
+
     public $email;
+
     public $address;
+
     public $type = 'particular';
+
     public $credit_limit;
+
     public $payment_terms;
 
     public function render()
@@ -77,5 +86,8 @@ class Index extends Component
         $this->showForm = false;
     }
 
-    public function cancel() { $this->resetForm(); }
+    public function cancel()
+    {
+        $this->resetForm();
+    }
 }

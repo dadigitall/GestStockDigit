@@ -2,16 +2,18 @@
 
 namespace App\Livewire\Pages\Stock;
 
+use App\Models\Product;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Product;
 
 class Index extends Component
 {
     use WithPagination;
 
     public $search = '';
+
     public $filterStore = '';
+
     public $filterStatus = '';
 
     public function render()
@@ -27,7 +29,9 @@ class Index extends Component
             ->when($this->filterStatus, function ($q) {
                 match ($this->filterStatus) {
                     'low' => $q->where('min_stock', '>', 0)->whereColumn('stock_quantity', '<=', 'min_stock'),
-                    'out' => $q->where(function ($sq) { $sq->whereNull('stock_quantity')->orWhere('stock_quantity', '<=', 0); }),
+                    'out' => $q->where(function ($sq) {
+                        $sq->whereNull('stock_quantity')->orWhere('stock_quantity', '<=', 0);
+                    }),
                     'available' => $q->where('stock_quantity', '>', 0),
                     default => null,
                 };

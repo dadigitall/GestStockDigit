@@ -2,19 +2,25 @@
 
 namespace App\Livewire\Pages\Categories;
 
+use App\Models\Category;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Category;
 
 class Index extends Component
 {
     use WithPagination;
 
     public $name = '';
+
     public $description = '';
+
     public $color = '#6366f1';
+
     public $parent_id = '';
+
     public $editingCategory = null;
+
     public $showForm = false;
 
     public function render()
@@ -70,7 +76,7 @@ class Index extends Component
         if ($this->editingCategory) {
             $this->editingCategory->update($data);
         } else {
-            $data['slug'] = \Illuminate\Support\Str::slug($this->name);
+            $data['slug'] = Str::slug($this->name);
             Category::create($data);
         }
 
@@ -79,7 +85,7 @@ class Index extends Component
 
     public function toggleActive(Category $category)
     {
-        $category->update(['is_active' => !$category->is_active]);
+        $category->update(['is_active' => ! $category->is_active]);
     }
 
     public function resetForm()

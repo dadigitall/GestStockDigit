@@ -2,24 +2,32 @@
 
 namespace App\Livewire\Pages\Suppliers;
 
+use App\Models\Supplier;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Supplier;
 
 class Index extends Component
 {
     use WithPagination;
 
     public $search = '';
+
     public $showForm = false;
+
     public $editingSupplier = null;
 
     public $name;
+
     public $type;
+
     public $phone;
+
     public $email;
+
     public $address;
+
     public $contact_name;
+
     public $payment_terms;
 
     public function render()
@@ -89,7 +97,7 @@ class Index extends Component
 
     public function toggleActive(Supplier $supplier)
     {
-        $supplier->update(['is_active' => !$supplier->is_active]);
+        $supplier->update(['is_active' => ! $supplier->is_active]);
     }
 
     public function resetForm()

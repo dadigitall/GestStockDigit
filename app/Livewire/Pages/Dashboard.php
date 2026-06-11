@@ -2,15 +2,18 @@
 
 namespace App\Livewire\Pages;
 
-use Livewire\Component;
 use App\Models\Product;
 use App\Models\Store;
+use Livewire\Component;
 
 class Dashboard extends Component
 {
     public $totalProducts = 0;
+
     public $totalStores = 0;
+
     public $lowStockProducts = 0;
+
     public $outOfStockProducts = 0;
 
     public function mount()

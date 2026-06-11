@@ -1,14 +1,17 @@
 <?php
 
+use App\Livewire\Pages\Dashboard;
+use App\Livewire\Pages\Products\Form;
+use App\Livewire\Pages\Products\Index;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', App\Livewire\Pages\Dashboard::class)->name('dashboard');
-    Route::get('products', App\Livewire\Pages\Products\Index::class)->name('products.index');
-    Route::get('products/create', App\Livewire\Pages\Products\Form::class)->name('products.create');
-    Route::get('products/{product}/edit', App\Livewire\Pages\Products\Form::class)->name('products.edit');
+    Route::get('dashboard', Dashboard::class)->name('dashboard');
+    Route::get('products', Index::class)->name('products.index');
+    Route::get('products/create', Form::class)->name('products.create');
+    Route::get('products/{product}/edit', Form::class)->name('products.edit');
     Route::get('categories', App\Livewire\Pages\Categories\Index::class)->name('categories.index');
     Route::get('suppliers', App\Livewire\Pages\Suppliers\Index::class)->name('suppliers.index');
     Route::get('customers', App\Livewire\Pages\Customers\Index::class)->name('customers.index');

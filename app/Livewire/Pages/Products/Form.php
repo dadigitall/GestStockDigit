@@ -2,38 +2,61 @@
 
 namespace App\Livewire\Pages\Products;
 
-use Livewire\Component;
-use App\Models\Product;
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\Supplier;
+use Livewire\Component;
 
 class Form extends Component
 {
     public ?Product $product = null;
+
     public $name;
+
     public $reference;
+
     public $barcode;
+
     public $category_id;
+
     public $supplier_id;
+
     public $description;
+
     public $purchase_price = 0;
+
     public $sale_price = 0;
+
     public $wholesale_price;
+
     public $unit_sale = 'piece';
+
     public $unit_purchase = 'piece';
+
     public $min_stock = 0;
+
     public $max_stock;
+
     public $alert_threshold;
+
     public $is_active = true;
+
     public $is_sellable = true;
+
     public $is_stockable = true;
+
     public $track_lot = false;
+
     public $track_serial = false;
+
     public $track_expiry = false;
+
     public $brand;
+
     public $tax_rate = 0;
 
     public $categories = [];
+
     public $suppliers = [];
 
     public function mount(?Product $product = null)

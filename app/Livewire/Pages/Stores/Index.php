@@ -2,26 +2,36 @@
 
 namespace App\Livewire\Pages\Stores;
 
+use App\Models\Store;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Store;
 
 class Index extends Component
 {
     use WithPagination;
 
     public $search = '';
+
     public $showForm = false;
+
     public $editingStore = null;
 
     public $name;
+
     public $code;
+
     public $type = 'boutique';
+
     public $address;
+
     public $phone;
+
     public $email;
+
     public $allows_stock = true;
+
     public $allows_sales = true;
+
     public $allows_cash_register = false;
 
     public function render()
@@ -63,7 +73,7 @@ class Index extends Component
     {
         $this->validate([
             'name' => 'required|string|max:255',
-            'code' => 'required|string|max:50|unique:stores,code,' . ($this->editingStore?->id ?? ''),
+            'code' => 'required|string|max:50|unique:stores,code,'.($this->editingStore?->id ?? ''),
             'type' => 'required|string',
         ]);
 
@@ -91,7 +101,7 @@ class Index extends Component
 
     public function toggleActive(Store $store)
     {
-        $store->update(['is_active' => !$store->is_active]);
+        $store->update(['is_active' => ! $store->is_active]);
     }
 
     public function resetForm()

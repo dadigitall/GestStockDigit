@@ -2,16 +2,18 @@
 
 namespace App\Livewire\Pages\Products;
 
+use App\Models\Product;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Product;
 
 class Index extends Component
 {
     use WithPagination;
 
     public $search = '';
+
     public $sortField = 'name';
+
     public $sortDirection = 'asc';
 
     protected $queryString = ['search', 'sortField', 'sortDirection'];
