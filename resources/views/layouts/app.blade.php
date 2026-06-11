@@ -35,13 +35,13 @@
             </template>
 
             <!-- Sidebar wrapper -->
-            <div class="fixed lg:sticky top-0 left-0 z-50 h-screen flex-shrink-0 transition-transform duration-300 -translate-x-full lg:translate-x-0"
+            <div class="fixed lg:sticky top-0 left-0 z-50 h-screen w-72 flex-shrink-0 transition-transform duration-300 -translate-x-full lg:translate-x-0"
                  :class="{ 'translate-x-0': sidebarOpen }">
                 <livewire:layout.sidebar />
             </div>
 
             <!-- Main Content -->
-            <div class="flex-1 min-w-0 flex flex-col lg:pl-72">
+            <div class="flex-1 min-w-0 flex flex-col">
                 <!-- Top Navbar -->
                 <livewire:layout.topbar :pageTitle="$header ?? 'Tableau de bord'" />
 

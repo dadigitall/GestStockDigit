@@ -14,7 +14,18 @@ class Company extends Model
         'name', 'legal_name', 'tax_number', 'registration_number', 'logo',
         'address', 'phone', 'email', 'website', 'currency', 'date_format',
         'timezone', 'locale', 'is_active',
+        'invoice_prefix', 'sale_prefix', 'purchase_prefix',
+        'delivery_prefix', 'quotation_prefix', 'credit_note_prefix',
+        'transfer_prefix', 'invoice_footer', 'invoice_terms',
+        'ticket_footer', 'enable_multi_currency', 'secondary_currency',
+        'default_tax_rate', 'discount_max_rate', 'credit_limit_default',
+        'alert_threshold_global',
     ];
+
+    public static function current(): ?self
+    {
+        return auth()->user()->company;
+    }
 
     public function stores()
     {
