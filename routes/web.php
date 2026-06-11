@@ -22,6 +22,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('stock', App\Livewire\Pages\Stock\Index::class)->name('stock.index');
     Route::get('reports', App\Livewire\Pages\Reports\Index::class)->name('reports.index');
     Route::get('settings', App\Livewire\Pages\Settings\Index::class)->name('settings.index');
+    Route::get('support', App\Livewire\Pages\Support\Index::class)->name('support.index');
     Route::view('profile', 'profile')->name('profile');
 });
 
