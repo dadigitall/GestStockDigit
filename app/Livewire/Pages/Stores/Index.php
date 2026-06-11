@@ -15,6 +15,8 @@ class Index extends Component
 
     public $showForm = false;
 
+    public $viewMode = 'list';
+
     public $editingStore = null;
 
     public $name;
@@ -82,7 +84,13 @@ class Index extends Component
             ->orderBy('name')
             ->get();
 
-        return view('livewire.pages.stores.index', compact('stores', 'parents', 'managers'))
+        $tree = Store::where('company_id', $companyId)
+            ->whereNull('parent_id')
+            ->with('children')
+            ->orderBy('name')
+            ->get();
+
+        return view('livewire.pages.stores.index', compact('stores', 'parents', 'managers', 'tree'))
             ->layout('layouts.app', ['header' => 'Entités']);
     }
 
@@ -173,6 +181,11 @@ class Index extends Component
     public function cancel()
     {
         $this->resetForm();
+    }
+
+    public function toggleView($mode)
+    {
+        $this->viewMode = $mode;
     }
 
     public function getTypeLabel($type)
