@@ -3,23 +3,46 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Company;
+use App\Models\Store;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $this->call(RoleAndPermissionSeeder::class);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $company = Company::create([
+            'name' => 'Ma Société',
+            'legal_name' => 'Ma Société SARL',
+            'email' => 'contact@masociete.com',
+            'phone' => '+237 600 000 000',
+            'currency' => 'XAF',
         ]);
+
+        $store = Store::create([
+            'company_id' => $company->id,
+            'name' => 'Boutique Principale',
+            'code' => 'BP-001',
+            'type' => 'boutique',
+            'address' => 'Douala, Cameroun',
+            'phone' => '+237 600 000 001',
+            'allows_stock' => true,
+            'allows_sales' => true,
+            'allows_cash_register' => true,
+        ]);
+
+        $admin = User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'admin@geststock.com',
+            'password' => bcrypt('password'),
+            'company_id' => $company->id,
+            'store_id' => $store->id,
+            'first_name' => 'Admin',
+            'last_name' => 'Système',
+        ]);
+
+        $admin->assignRole('Super Admin');
     }
 }
