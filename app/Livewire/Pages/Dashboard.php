@@ -27,7 +27,7 @@ class Dashboard extends Component
             ->whereColumn('stock_quantity', '<=', 'min_stock')
             ->count();
         $this->outOfStockProducts = Product::where('company_id', $companyId)
-            ->whereColumn('stock_quantity', '<=', 0)
+            ->where('stock_quantity', '<=', 0)
             ->count();
     }
 
