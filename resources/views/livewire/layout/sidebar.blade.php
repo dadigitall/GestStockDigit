@@ -159,6 +159,23 @@ new class extends Component
 
         <div class="text-[10px] uppercase tracking-widest text-slate-400 px-3 mb-2 mt-6 font-semibold">Système</div>
 
+        @can('manage companies')
+            <x-nav-link-sidebar :href="route('companies.index')" :active="request()->routeIs('companies.*')" wire:navigate>
+                <x-slot:icon>
+                    <svg class="lucide lucide-building2 w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" />
+                        <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" />
+                        <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" />
+                        <path d="M10 6h4" />
+                        <path d="M10 10h4" />
+                        <path d="M10 14h4" />
+                        <path d="M10 18h4" />
+                    </svg>
+                </x-slot>
+                Entreprises
+            </x-nav-link-sidebar>
+        @endcan
+
         <x-nav-link-sidebar :href="route('settings.index')" :active="request()->routeIs('settings.*')" wire:navigate>
             <x-slot:icon>
                 <svg class="lucide lucide-settings w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

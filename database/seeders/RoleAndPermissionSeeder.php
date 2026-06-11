@@ -29,6 +29,7 @@ class RoleAndPermissionSeeder extends Seeder
             'view reports', 'export reports',
             'view financial reports', 'view margins',
             'manage users', 'manage roles', 'manage settings',
+            'manage companies',
             'view audit log',
         ];
 
