@@ -220,21 +220,17 @@
     @endif
 
     <!-- Full Hierarchy Tree -->
-    <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-white/5 p-6">
-        <h2 class="text-sm font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-            <svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h4"/><path d="M8 6v12"/><path d="M14 14h4"/><path d="M16 14v4"/><path d="M3 3v18h18"/></svg>
-            Arbre hiérarchique complet
-        </h2>
+    <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-white/5 p-6" id="hierarchy">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                <svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h4"/><path d="M8 6v12"/><path d="M14 14h4"/><path d="M16 14v4"/><path d="M3 3v18h18"/></svg>
+                Arbre hiérarchique complet
+            </h2>
+            <a href="{{ route('stores.index') }}" wire:navigate class="text-xs text-indigo-600 dark:text-indigo-400 hover:underline">Voir en pleine page →</a>
+        </div>
         <div class="text-sm">
-            @php
-                $rootList = \App\Models\Store::where('company_id', $store->company_id)
-                    ->whereNull('parent_id')
-                    ->with('children')
-                    ->orderBy('name')
-                    ->get();
-            @endphp
-            @foreach($rootList as $root)
-                @include('components.store-tree-item', ['store' => $root, 'active' => $store->id])
+            @foreach($fullTree as $root)
+                @include('components.store-tree-item', ['store' => $root, 'active' => $store->id, 'depth' => 0])
             @endforeach
         </div>
     </div>

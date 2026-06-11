@@ -38,7 +38,9 @@ class Show extends Component
 
     public function render()
     {
-        return view('livewire.pages.stores.show')
+        return view('livewire.pages.stores.show', [
+            'fullTree' => Store::fullTree($this->store->company_id),
+        ])
             ->layout('layouts.app', ['header' => $this->store->name]);
     }
 }

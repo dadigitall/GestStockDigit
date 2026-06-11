@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -39,5 +40,21 @@ class Store extends Model
     public function users()
     {
         return $this->hasMany(User::class);
+    }
+
+    public static function fullTree(int $companyId): Collection
+    {
+        $all = self::where('company_id', $companyId)
+            ->with('parent', 'manager')
+            ->orderBy('name')
+            ->get();
+
+        $grouped = $all->groupBy('parent_id');
+
+        foreach ($all as $store) {
+            $store->setRelation('children', $grouped->get($store->id, collect()));
+        }
+
+        return $grouped->get(null, collect());
     }
 }

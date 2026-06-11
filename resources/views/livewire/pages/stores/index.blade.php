@@ -1,8 +1,11 @@
 <div class="space-y-6">
     <!-- Header -->
     <div class="flex items-center justify-between">
-        <div class="flex items-center gap-4">
-            <p class="text-sm text-slate-500">{{ $stores->total() }} entité(s)</p>
+        <div class="flex items-center gap-2 text-sm text-slate-500">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h4"/><path d="M8 6v12"/><path d="M14 14h4"/><path d="M16 14v4"/><path d="M3 3v18h18"/></svg>
+            <span>Hiérarchie organisationnelle</span>
+            <span class="text-slate-300">·</span>
+            <span>{{ $stores->total() }} entité(s)</span>
         </div>
         <div class="flex items-center gap-3">
             <!-- View Toggle -->
@@ -114,27 +117,132 @@
     @endif
 
     @if($viewMode === 'tree')
-        <!-- Tree View -->
-        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-white/5 p-6">
-            <h2 class="text-sm font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                <svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h4"/><path d="M8 6v12"/><path d="M14 14h4"/><path d="M16 14v4"/><path d="M3 3v18h18"/></svg>
-                Hiérarchie organisationnelle
-            </h2>
-            @if($tree->count() > 0)
-                <div class="text-sm">
-                    @foreach($tree as $root)
-                        @include('components.store-tree-item', ['store' => $root, 'active' => null])
-                    @endforeach
+        <!-- Tree View - CDC 8.5 Hiérarchie organisationnelle -->
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-white/5 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 dark:border-white/5 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="flex -space-x-1">
+                        <div class="w-7 h-7 rounded-md bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white text-[10px] font-bold">F</div>
+                        <div class="w-7 h-7 rounded-md bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white text-[10px] font-bold">B</div>
+                        <div class="w-7 h-7 rounded-md bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white text-[10px] font-bold">E</div>
+                        <div class="w-7 h-7 rounded-md bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-white text-[10px] font-bold">R</div>
+                    </div>
+                    <div>
+                        <h2 class="text-sm font-semibold text-slate-900 dark:text-white">Hiérarchie organisationnelle</h2>
+                        <p class="text-xs text-slate-400">
+                            entreprise → filiales/agences → boutiques/magasins → dépôts/entrepôts → rayons/emplacements
+                        </p>
+                    </div>
                 </div>
-            @else
-                <p class="text-sm text-slate-400">Aucune entité racine. Créez votre première entité.</p>
-            @endif
+                <div class="flex items-center gap-2 text-xs text-slate-400">
+                    <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-violet-500"></span>Filiale/Agence</span>
+                    <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>Boutique/Magasin</span>
+                    <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span>Dépôt/Entrepôt</span>
+                    <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-sky-500"></span>Rayon/Emplacement</span>
+                </div>
+            </div>
+            <div class="p-6">
+                @if($tree->count() > 0)
+                    @foreach($tree as $root)
+                        @include('components.store-tree-item', ['store' => $root, 'active' => null, 'depth' => 0])
+                    @endforeach
+                @else
+                    <div class="text-center py-12 text-slate-400">
+                        <svg class="w-16 h-16 mx-auto mb-4 text-slate-300 dark:text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                        <p class="text-base font-medium">Aucune entité</p>
+                        <p class="text-sm mt-1">Créez votre première entité racine pour construire la hiérarchie.</p>
+                    </div>
+                @endif
+            </div>
+        </div>
+
+        <!-- Legend : Hierarchy patterns possibles -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-white/5 p-4">
+                <div class="flex items-center gap-2 text-xs text-slate-500 mb-2">
+                    <svg class="w-4 h-4 text-violet-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    <span>Entreprise → Filiales → Agences → Boutiques</span>
+                </div>
+                <div class="flex items-center gap-1.5 text-[10px]">
+                    <span class="px-1.5 py-0.5 rounded bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300">Siège</span>
+                    <svg class="w-3 h-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                    <span class="px-1.5 py-0.5 rounded bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300">Filiale</span>
+                    <svg class="w-3 h-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                    <span class="px-1.5 py-0.5 rounded bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300">Agence</span>
+                    <svg class="w-3 h-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                    <span class="px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">Boutique</span>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-white/5 p-4">
+                <div class="flex items-center gap-2 text-xs text-slate-500 mb-2">
+                    <svg class="w-4 h-4 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 21V10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1v11"/><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 1.132-1.803l7.95-3.974a2 2 0 0 1 1.837 0l7.948 3.974A2 2 0 0 1 22 8z"/></svg>
+                    <span>Entrepôt central → Dépôts régionaux → Points de vente</span>
+                </div>
+                <div class="flex items-center gap-1.5 text-[10px]">
+                    <span class="px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300">Central</span>
+                    <svg class="w-3 h-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                    <span class="px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300">Dépôt</span>
+                    <svg class="w-3 h-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                    <span class="px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">PdV</span>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-white/5 p-4">
+                <div class="flex items-center gap-2 text-xs text-slate-500 mb-2">
+                    <svg class="w-4 h-4 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                    <span>Magasins indépendants</span>
+                </div>
+                <div class="flex items-center gap-1.5 text-[10px]">
+                    <span class="px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">Siège</span>
+                    <svg class="w-3 h-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                    <div class="flex gap-0.5">
+                        <span class="px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">M1</span>
+                        <span class="px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">M2</span>
+                        <span class="px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">M3</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-white/5 p-4">
+                <div class="flex items-center gap-2 text-xs text-slate-500 mb-2">
+                    <svg class="w-4 h-4 text-sky-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/></svg>
+                    <span>Supermarché → Rayons → Emplacements</span>
+                </div>
+                <div class="flex items-center gap-1.5 text-[10px]">
+                    <span class="px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">Supermarché</span>
+                    <svg class="w-3 h-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                    <span class="px-1.5 py-0.5 rounded bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300">Rayon</span>
+                    <svg class="w-3 h-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                    <span class="px-1.5 py-0.5 rounded bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300">Emplacement</span>
+                </div>
+            </div>
         </div>
     @else
-        <!-- List View: Entity Cards -->
+        <!-- List View -->
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             @forelse($stores as $store)
                 <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-white/5 p-5 hover:shadow-md transition group {{ $store->is_active ? '' : 'opacity-60' }}">
+                    <!-- Hiérarchie path -->
+                    @if($store->parent)
+                        <div class="flex items-center gap-1 text-[10px] text-slate-400 mb-2">
+                            @php
+                                $path = [];
+                                $current = $store;
+                                while ($current->parent) {
+                                    $path[] = $current->parent;
+                                    $current = $current->parent;
+                                }
+                                $path = array_reverse($path);
+                            @endphp
+                            @foreach($path as $p)
+                                <a href="{{ route('stores.show', $p) }}" wire:navigate class="hover:text-indigo-600 transition truncate max-w-[80px]">{{ $p->name }}</a>
+                                <svg class="w-3 h-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="flex items-center gap-1 text-[10px] text-slate-400 mb-2">
+                            <span class="inline-flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>Racine</span>
+                        </div>
+                    @endif
+
                     <div class="flex items-start gap-3">
                         <a href="{{ route('stores.show', $store) }}" wire:navigate class="w-10 h-10 rounded-xl bg-gradient-to-br {{ match($store->type) {
                             'filiale', 'agence' => 'from-violet-500 to-purple-600',
@@ -182,12 +290,6 @@
                         </button>
                     </div>
 
-                    @if($store->parent)
-                        <p class="text-xs text-slate-400 mt-2">
-                            Rattachement : <a href="{{ route('stores.show', $store->parent) }}" wire:navigate class="font-medium text-slate-600 dark:text-slate-400 hover:text-indigo-600 transition">{{ $store->parent->name }}</a>
-                        </p>
-                    @endif
-
                     @if($store->address || $store->phone)
                         <div class="mt-2 space-y-0.5 text-xs text-slate-500">
                             @if($store->address)<p>📍 {{ $store->address }}</p>@endif
@@ -214,6 +316,19 @@
                             <span class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300">Caisse</span>
                         @endif
                     </div>
+
+                    <!-- Children count -->
+                    @php
+                        $childCount = \App\Models\Store::where('parent_id', $store->id)->count();
+                    @endphp
+                    @if($childCount > 0)
+                        <div class="mt-3 pt-3 border-t border-slate-100 dark:border-white/5">
+                            <a href="{{ route('stores.show', $store) }}#children" wire:navigate class="flex items-center gap-1.5 text-xs text-slate-400 hover:text-indigo-600 transition">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h4"/><path d="M8 6v12"/><path d="M14 14h4"/><path d="M16 14v4"/><path d="M3 3v18h18"/></svg>
+                                {{ $childCount }} entité(s) rattachée(s)
+                            </a>
+                        </div>
+                    @endif
                 </div>
             @empty
                 <div class="md:col-span-2 xl:col-span-3 text-center py-16 text-slate-400">
