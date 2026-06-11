@@ -9,7 +9,7 @@ class StockMovement extends Model
     protected $fillable = [
         'company_id', 'product_id', 'store_id', 'user_id', 'type',
         'quantity', 'stock_before', 'stock_after', 'unit_cost',
-        'reference_type', 'reference_id', 'notes',
+        'reference_type', 'reference_id', 'status', 'notes',
     ];
 
     public function company()

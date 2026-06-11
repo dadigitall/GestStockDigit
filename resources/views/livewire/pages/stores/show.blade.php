@@ -219,6 +219,108 @@
         </div>
     @endif
 
+    <!-- Stock local / Produits vendables -->
+    @if($store->allows_stock)
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-white/5 p-6">
+                <h2 class="text-sm font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                    <svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/></svg>
+                    Produits vendables
+                </h2>
+                @php
+                    $sellables = $store->products()->wherePivot('is_sellable', true)->wherePivot('is_active', true)->take(10)->get();
+                @endphp
+                @if($sellables->count() > 0)
+                    <div class="space-y-2">
+                        @foreach($sellables as $p)
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-slate-700 dark:text-slate-300">{{ $p->name }}</span>
+                                <span class="text-xs text-slate-400">{{ $p->reference }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="text-sm text-slate-400">Aucun produit assigné à ce magasin.</p>
+                @endif
+            </div>
+
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-white/5 p-6">
+                <h2 class="text-sm font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                    <svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    Derniers mouvements
+                </h2>
+                @php
+                    $mouvements = $store->stockMovements()->with('product', 'user')->latest()->take(10)->get();
+                @endphp
+                @if($mouvements->count() > 0)
+                    <div class="space-y-2">
+                        @foreach($mouvements as $m)
+                            <div class="flex items-center justify-between text-sm py-1.5 border-b border-slate-100 dark:border-white/5 last:border-0">
+                                <div>
+                                    <span class="text-slate-700 dark:text-slate-300">{{ $m->product?->name ?? '—' }}</span>
+                                    <span class="text-[10px] text-slate-400 ml-2">{{ $m->type }}</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs {{ $m->quantity > 0 ? 'text-emerald-600' : 'text-rose-600' }}">
+                                        {{ $m->quantity > 0 ? '+' : '' }}{{ $m->quantity }}
+                                    </span>
+                                    <span class="text-[10px] text-slate-400">{{ $m->created_at->format('d/m') }}</span>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="text-sm text-slate-400">Aucun mouvement enregistré.</p>
+                @endif
+            </div>
+        </div>
+    @endif
+
+    <!-- Users assigned -->
+    @if($store->users()->count() > 0)
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-white/5 p-6">
+            <h2 class="text-sm font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                <svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Utilisateurs affectés ({{ $store->users()->count() }})
+            </h2>
+            <div class="flex flex-wrap gap-2">
+                @foreach($store->users as $u)
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-white/5 text-sm text-slate-700 dark:text-slate-300">
+                        <span class="w-5 h-5 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-[10px] flex items-center justify-center font-bold">{{ substr($u->name, 0, 1) }}</span>
+                        {{ $u->name }}
+                    </span>
+                @endforeach
+            </div>
+        </div>
+    @endif
+
+    <!-- Zones / Emplacements -->
+    @if($store->locations()->count() > 0)
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-white/5 p-6">
+            <h2 class="text-sm font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                <svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                Zones & emplacements ({{ $store->locations()->count() }})
+            </h2>
+            @php
+                $grouped = $store->locations->groupBy('type');
+            @endphp
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                @foreach($grouped as $type => $locs)
+                    <div>
+                        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">{{ str_replace('_', ' ', $type) }}</span>
+                        <div class="mt-1 space-y-1">
+                            @foreach($locs as $l)
+                                <span class="inline-flex items-center gap-1 text-xs text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-white/5 px-2 py-0.5 rounded">
+                                    {{ $l->name }} <span class="text-[10px] font-mono text-slate-400">{{ $l->code }}</span>
+                                </span>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
+
     <!-- Full Hierarchy Tree -->
     <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-white/5 p-6" id="hierarchy">
         <div class="flex items-center justify-between mb-4">

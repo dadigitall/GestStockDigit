@@ -33,4 +33,16 @@ class Product extends Model
     {
         return $this->belongsTo(Supplier::class);
     }
+
+    public function stores()
+    {
+        return $this->belongsToMany(Store::class, 'product_store')
+            ->withPivot('min_stock', 'max_stock', 'is_sellable', 'is_active')
+            ->withTimestamps();
+    }
+
+    public function stockMovements()
+    {
+        return $this->hasMany(StockMovement::class);
+    }
 }

@@ -42,6 +42,37 @@ class Store extends Model
         return $this->hasMany(User::class);
     }
 
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'product_store')
+            ->withPivot('min_stock', 'max_stock', 'is_sellable', 'is_active')
+            ->withTimestamps();
+    }
+
+    public function sellableProducts()
+    {
+        return $this->belongsToMany(Product::class, 'product_store')
+            ->wherePivot('is_sellable', true)
+            ->wherePivot('is_active', true)
+            ->withPivot('min_stock', 'max_stock')
+            ->withTimestamps();
+    }
+
+    public function stockMovements()
+    {
+        return $this->hasMany(StockMovement::class);
+    }
+
+    public function locations()
+    {
+        return $this->hasMany(Location::class);
+    }
+
+    public function rootLocations()
+    {
+        return $this->hasMany(Location::class)->whereNull('parent_id');
+    }
+
     public static function fullTree(int $companyId): Collection
     {
         $all = self::where('company_id', $companyId)

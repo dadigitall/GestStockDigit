@@ -1,6 +1,8 @@
 <?php
 
 use App\Livewire\Pages\Dashboard;
+use App\Livewire\Pages\Entrepots\Index as EntrepotsIndex;
+use App\Livewire\Pages\Magasins\Index as MagasinsIndex;
 use App\Livewire\Pages\Products\Form;
 use App\Livewire\Pages\Products\Index;
 use App\Livewire\Pages\Stores\Show;
@@ -18,6 +20,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('customers', App\Livewire\Pages\Customers\Index::class)->name('customers.index');
     Route::get('stores', App\Livewire\Pages\Stores\Index::class)->name('stores.index');
     Route::get('stores/{store}', Show::class)->name('stores.show');
+    Route::get('magasins', MagasinsIndex::class)->name('magasins.index');
+    Route::get('entrepots', EntrepotsIndex::class)->name('entrepots.index');
     Route::get('purchases', App\Livewire\Pages\Purchases\Index::class)->name('purchases.index');
     Route::get('invoices', App\Livewire\Pages\Invoices\Index::class)->name('invoices.index');
     Route::get('pos', App\Livewire\Pages\Pos\Index::class)->name('pos.index');
