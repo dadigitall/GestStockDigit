@@ -26,7 +26,7 @@
             <div class="border-t border-gray-200 dark:border-gray-700 pt-4 space-y-2 text-sm">
                 @foreach($lastSale->items as $item)
                     <div class="flex justify-between">
-                        <span class="text-gray-600 dark:text-gray-400">{{ $item->product_name }} x{{ $item->quantity }}</span>
+                        <span class="text-gray-600 dark:text-gray-400">{{ $item->product_name }} x{{ number_format(abs($item->quantity), 0) }}</span>
                         <span class="font-medium text-gray-900 dark:text-white">{{ number_format($item->subtotal, 0, ',', ' ') }} F</span>
                     </div>
                 @endforeach
@@ -35,11 +35,11 @@
             <div class="border-t border-gray-200 dark:border-gray-700 mt-4 pt-4 space-y-1 text-sm">
                 <div class="flex justify-between font-bold text-lg text-gray-900 dark:text-white">
                     <span>Total</span>
-                    <span>{{ number_format($lastSale->total, 0, ',', ' ') }} F</span>
+                    <span>{{ number_format(abs($lastSale->total), 0, ',', ' ') }} F</span>
                 </div>
                 <div class="flex justify-between text-gray-500">
                     <span>Payé</span>
-                    <span>{{ number_format($lastSale->paid_amount, 0, ',', ' ') }} F</span>
+                    <span>{{ number_format(abs($lastSale->paid_amount), 0, ',', ' ') }} F</span>
                 </div>
                 @if($lastSale->change_amount > 0)
                     <div class="flex justify-between text-gray-500">
@@ -49,11 +49,26 @@
                 @endif
                 <div class="flex justify-between text-gray-500">
                     <span>Paiement</span>
-                    <span class="capitalize">{{ str_replace('_', ' ', $lastSale->payment_method) }}</span>
+                    <span class="capitalize">{{ str_replace(['_', 'cash', 'mobile_money', 'card', 'transfer', 'check', 'credit', 'gift_card', 'wallet'], [' ', 'Espèces', 'Mobile Money', 'Carte', 'Virement', 'Chèque', 'Crédit', "Bon d'achat", 'Portefeuille'], $lastSale->payment_method) }}</span>
                 </div>
+                @if($lastSale->payment_method_secondary)
+                    <div class="flex justify-between text-gray-500">
+                        <span>+ {{ str_replace(['_', 'cash', 'mobile_money', 'card', 'transfer', 'check', 'credit', 'gift_card', 'wallet'], [' ', 'Espèces', 'Mobile Money', 'Carte', 'Virement', 'Chèque', 'Crédit', "Bon d'achat", 'Portefeuille'], $lastSale->payment_method_secondary) }}</span>
+                        <span>{{ number_format($lastSale->payment_secondary_amount, 0, ',', ' ') }} F</span>
+                    </div>
+                @endif
             </div>
 
-            <button wire:click="newSale" class="mt-6 w-full py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+            <div class="mt-4 flex gap-2">
+                <a href="{{ route('pos.receipt.print', $lastSale) }}" target="_blank" class="flex-1 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors text-center text-sm">
+                    Imprimer le ticket
+                </a>
+                <button wire:click="returnSale({{ $lastSale->id }})" onclick="return confirm('Effectuer le retour de cette vente ? Le stock sera réintégré.')" class="flex-1 py-3 bg-amber-600 text-white font-medium rounded-lg hover:bg-amber-700 transition-colors text-sm">
+                    Retour
+                </button>
+            </div>
+
+            <button wire:click="newSale" class="mt-2 w-full py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors">
                 Nouvelle vente
             </button>
         </div>
@@ -63,6 +78,9 @@
         <div class="flex flex-col lg:flex-row gap-6" style="min-height: calc(100vh - 12rem);">
             <!-- Products Panel -->
             <div class="flex-1 flex flex-col">
+                <div class="mb-2">
+                    <input wire:model.live="barcode" wire:keyup="updatedBarcode" type="text" placeholder="Scanner un code-barres..." class="w-full px-4 py-2.5 border-2 border-indigo-400 dark:border-indigo-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-lg focus:ring-2 focus:ring-indigo-500 font-mono tracking-wider" autofocus>
+                </div>
                 <div class="mb-4">
                     <input wire:model.live.debounce.200ms="search" type="text" placeholder="Rechercher un produit (nom, réf., code-barres)..." class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-lg focus:ring-2 focus:ring-indigo-500">
                 </div>
@@ -98,7 +116,7 @@
                     <select wire:model.live="customerId" class="w-full text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3 py-2">
                         <option value="">Client comptoir</option>
                         @foreach($customers as $customer)
-                            <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+                            <option value="{{ $customer->id }}">{{ $customer->name }} @if($customer->balance > 0) ({{ number_format($customer->balance, 0, ',', ' ') }} F) @endif</option>
                         @endforeach
                     </select>
                 </div>
@@ -127,7 +145,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/>
                             </svg>
                             <p class="text-sm">Panier vide</p>
-                            <p class="text-xs mt-1">Cliquez sur un produit</p>
+                            <p class="text-xs mt-1">Scannez ou cliquez un produit</p>
                         </div>
                     @endforelse
                 </div>
@@ -164,21 +182,38 @@
         <!-- Payment Modal -->
         @if($showPaymentModal)
             <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" wire:key="payment-modal">
-                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-6" @click.away="closePayment">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-6 max-h-[90vh] overflow-y-auto" @click.away="closePayment">
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Finaliser la vente</h3>
 
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mode de paiement</label>
-                            <select wire:model="paymentMethod" class="w-full border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3 py-2.5">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mode de paiement principal</label>
+                            <select wire:model.live="paymentMethod" class="w-full border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3 py-2.5">
                                 <option value="cash">Espèces</option>
                                 <option value="mobile_money">Mobile Money</option>
                                 <option value="card">Carte bancaire</option>
                                 <option value="transfer">Virement</option>
                                 <option value="check">Chèque</option>
                                 <option value="credit">Crédit client</option>
+                                <option value="gift_card">Bon d'achat</option>
+                                @if($customerId)
+                                    <option value="wallet">Portefeuille client</option>
+                                @endif
                             </select>
                         </div>
+
+                        @if($paymentMethod === 'gift_card')
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Code du bon d'achat</label>
+                                <div class="flex gap-2">
+                                    <input wire:model="giftCardCode" type="text" class="flex-1 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3 py-2.5" placeholder="Ex: BON-001">
+                                    <button wire:click="lookupGiftCard" class="px-4 py-2.5 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700">Vérifier</button>
+                                </div>
+                                @if($giftCard)
+                                    <p class="text-sm text-emerald-600 mt-1">Solde: {{ number_format($giftCard->balance, 0, ',', ' ') }} F</p>
+                                @endif
+                            </div>
+                        @endif
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Total à payer</label>
@@ -191,16 +226,56 @@
                             @error('paidAmount') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
                         </div>
 
-                        @if($changeAmount > 0)
+                        @if($changeAmount > 0 && $paymentMethod !== 'gift_card')
                             <div class="p-3 bg-green-50 dark:bg-green-900/30 rounded-lg">
                                 <p class="text-sm text-green-700 dark:text-green-300">Monnaie à rendre</p>
                                 <p class="text-xl font-bold text-green-600">{{ number_format($changeAmount, 0, ',', ' ') }} F</p>
                             </div>
                         @endif
 
-                        @if((float) $paidAmount < $total && $paidAmount > 0)
+                        <!-- Mixed payment toggle -->
+                        <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+                            @if(!$secondaryPaymentMethod)
+                                <button wire:click="$set('secondaryPaymentMethod', 'cash')" type="button" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
+                                    + Paiement mixte (deux moyens)
+                                </button>
+                            @else
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Paiement secondaire</span>
+                                        <button wire:click="$set('secondaryPaymentMethod', '')" type="button" class="text-xs text-red-500 hover:text-red-700">× Supprimer</button>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <div>
+                                            <select wire:model.live="secondaryPaymentMethod" class="w-full text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-2 py-2">
+                                                <option value="cash">Espèces</option>
+                                                <option value="mobile_money">Mobile Money</option>
+                                                <option value="card">Carte</option>
+                                                <option value="transfer">Virement</option>
+                                                <option value="check">Chèque</option>
+                                                @if($customerId)
+                                                    <option value="wallet">Portefeuille</option>
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <input wire:model.live="secondaryAmount" type="number" step="1" class="w-full border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-2 py-2 text-sm" placeholder="Montant">
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+
+                        @php
+                            $totalPaid = (float) $paidAmount + (float) $secondaryAmount;
+                            if ($paymentMethod === 'gift_card' && $giftCard) {
+                                $totalPaid = min((float) $giftCard->balance, $total) + (float) $paidAmount;
+                            }
+                        @endphp
+
+                        @if($totalPaid > 0 && $totalPaid < $total)
                             <div class="p-3 bg-amber-50 dark:bg-amber-900/30 rounded-lg">
-                                <p class="text-sm text-amber-700 dark:text-amber-300">Reste à payer : {{ number_format($total - (float) $paidAmount, 0, ',', ' ') }} F</p>
+                                <p class="text-sm text-amber-700 dark:text-amber-300">Reste à payer : {{ number_format($total - $totalPaid, 0, ',', ' ') }} F</p>
                             </div>
                         @endif
 
@@ -214,7 +289,7 @@
                         <button wire:click="closePayment" class="flex-1 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                             Annuler
                         </button>
-                        <button wire:click="confirmSale" class="flex-1 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors" {{ (float) $paidAmount < $total ? 'disabled' : '' }}>
+                        <button wire:click="confirmSale" class="flex-1 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors" {{ $totalPaid < $total ? 'disabled' : '' }}>
                             Confirmer la vente
                         </button>
                     </div>

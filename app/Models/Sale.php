@@ -15,7 +15,7 @@ class Sale extends Model
         'type', 'status', 'subtotal', 'tax_amount', 'discount', 'total',
         'paid_amount', 'change_amount', 'payment_method',
         'payment_method_secondary', 'payment_secondary_amount',
-        'notes', 'sold_at',
+        'notes', 'sold_at', 'expected_delivery_date', 'commercial_terms',
     ];
 
     protected function casts(): array

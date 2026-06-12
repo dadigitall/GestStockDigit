@@ -20,7 +20,17 @@ class Company extends Model
         'ticket_footer', 'enable_multi_currency', 'secondary_currency',
         'default_tax_rate', 'discount_max_rate', 'credit_limit_default',
         'alert_threshold_global',
+        'features',
+        'hardware',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'features' => 'array',
+            'hardware' => 'array',
+        ];
+    }
 
     public static function current(): ?self
     {

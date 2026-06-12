@@ -29,6 +29,18 @@
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Couleur</label>
                     <input wire:model="color" type="color" class="w-full h-10 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer">
                 </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Marge (%)</label>
+                    <input wire:model="margin_rate" type="number" step="0.01" min="0" max="100" class="w-full border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3 py-2 focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Marge min. (%)</label>
+                    <input wire:model="min_margin" type="number" step="0.01" min="0" max="100" class="w-full border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3 py-2 focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Seuil stock</label>
+                    <input wire:model="stock_threshold" type="number" min="0" class="w-full border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3 py-2 focus:ring-2 focus:ring-indigo-500">
+                </div>
                 <div class="flex items-end gap-2">
                     <button type="submit" class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700">Enregistrer</button>
                     <button type="button" wire:click="cancel" class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Annuler</button>
@@ -67,7 +79,15 @@
                 @if($category->description)
                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">{{ $category->description }}</p>
                 @endif
-                <div class="mt-3 text-xs text-gray-400">{{ $category->products_count ?? 0 }} produit(s)</div>
+                <div class="mt-3 flex flex-wrap gap-2 text-xs">
+                    <span class="text-gray-400">{{ $category->products_count ?? 0 }} produit(s)</span>
+                    @if($category->margin_rate)
+                        <span class="px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">Marge {{ $category->margin_rate }}%</span>
+                    @endif
+                    @if($category->stock_threshold)
+                        <span class="px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300">Seuil {{ $category->stock_threshold }}</span>
+                    @endif
+                </div>
             </div>
         @empty
             <div class="lg:col-span-3 text-center py-12 text-gray-500 dark:text-gray-400">

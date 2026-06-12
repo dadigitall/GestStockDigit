@@ -19,6 +19,12 @@ class Index extends Component
 
     public $parent_id = '';
 
+    public $margin_rate = null;
+
+    public $min_margin = null;
+
+    public $stock_threshold = null;
+
     public $editingCategory = null;
 
     public $showForm = false;
@@ -53,6 +59,9 @@ class Index extends Component
         $this->description = $category->description;
         $this->color = $category->color ?? '#6366f1';
         $this->parent_id = $category->parent_id;
+        $this->margin_rate = $category->margin_rate;
+        $this->min_margin = $category->min_margin;
+        $this->stock_threshold = $category->stock_threshold;
         $this->showForm = true;
     }
 
@@ -63,6 +72,9 @@ class Index extends Component
             'description' => 'nullable|string',
             'color' => 'nullable|string|max:7',
             'parent_id' => 'nullable|exists:categories,id',
+            'margin_rate' => 'nullable|numeric|min:0|max:100',
+            'min_margin' => 'nullable|numeric|min:0|max:100',
+            'stock_threshold' => 'nullable|integer|min:0',
         ]);
 
         $data = [
@@ -71,6 +83,9 @@ class Index extends Component
             'description' => $this->description,
             'color' => $this->color,
             'parent_id' => $this->parent_id ?: null,
+            'margin_rate' => $this->margin_rate ?: null,
+            'min_margin' => $this->min_margin ?: null,
+            'stock_threshold' => $this->stock_threshold ?: null,
         ];
 
         if ($this->editingCategory) {
@@ -94,6 +109,9 @@ class Index extends Component
         $this->description = '';
         $this->color = '#6366f1';
         $this->parent_id = '';
+        $this->margin_rate = null;
+        $this->min_margin = null;
+        $this->stock_threshold = null;
         $this->editingCategory = null;
         $this->showForm = false;
     }

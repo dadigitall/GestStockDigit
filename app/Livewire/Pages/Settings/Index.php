@@ -3,6 +3,7 @@
 namespace App\Livewire\Pages\Settings;
 
 use App\Models\Company;
+use App\Services\SettingsService;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -77,7 +78,27 @@ class Index extends Component
 
     public $secondary_currency;
 
-    public function mount()
+    // Features
+    public array $features = [];
+
+    public array $featureCategories = [];
+
+    // Hardware
+    public bool $hw_barcode_scanner = false;
+
+    public bool $hw_receipt_printer = false;
+
+    public bool $hw_a4_printer = false;
+
+    public bool $hw_cash_drawer = false;
+
+    public bool $hw_payment_terminal = false;
+
+    public bool $hw_electronic_scale = false;
+
+    public bool $hw_customer_display = false;
+
+    public function mount(SettingsService $settingsService)
     {
         $this->company = Company::current();
 
@@ -111,6 +132,19 @@ class Index extends Component
             'enable_multi_currency' => $this->company->enable_multi_currency,
             'secondary_currency' => $this->company->secondary_currency,
         ]);
+
+        $allFeatures = $settingsService->all($this->company);
+        $this->features = collect($allFeatures)->map(fn($f) => $f['enabled'])->toArray();
+        $this->featureCategories = $settingsService->categories();
+
+        $hardware = $this->company->hardware ?? [];
+        $this->hw_barcode_scanner = $hardware['barcode_scanner'] ?? false;
+        $this->hw_receipt_printer = $hardware['receipt_printer'] ?? false;
+        $this->hw_a4_printer = $hardware['a4_printer'] ?? false;
+        $this->hw_cash_drawer = $hardware['cash_drawer'] ?? false;
+        $this->hw_payment_terminal = $hardware['payment_terminal'] ?? false;
+        $this->hw_electronic_scale = $hardware['electronic_scale'] ?? false;
+        $this->hw_customer_display = $hardware['customer_display'] ?? false;
     }
 
     public function switchTab($tab)
@@ -211,6 +245,34 @@ class Index extends Component
         ]);
 
         session()->flash('success', 'Paramètres stock & finances enregistrés.');
+    }
+
+    public function saveHardware()
+    {
+        $this->company->update([
+            'hardware' => [
+                'barcode_scanner' => $this->hw_barcode_scanner,
+                'receipt_printer' => $this->hw_receipt_printer,
+                'a4_printer' => $this->hw_a4_printer,
+                'cash_drawer' => $this->hw_cash_drawer,
+                'payment_terminal' => $this->hw_payment_terminal,
+                'electronic_scale' => $this->hw_electronic_scale,
+                'customer_display' => $this->hw_customer_display,
+            ],
+        ]);
+
+        session()->flash('success', 'Paramètres périphériques enregistrés.');
+    }
+
+    public function saveFeatures(SettingsService $settingsService)
+    {
+        $this->validate([
+            'features.*' => 'boolean',
+        ]);
+
+        $settingsService->save($this->features, $this->company);
+
+        session()->flash('success', 'Fonctionnalités enregistrées.');
     }
 
     public function render()

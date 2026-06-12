@@ -45,7 +45,7 @@ class Store extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class, 'product_store')
-            ->withPivot('min_stock', 'max_stock', 'is_sellable', 'is_active')
+            ->withPivot('stock_quantity', 'reserved_stock', 'damaged_stock', 'blocked_stock', 'min_stock', 'max_stock', 'is_sellable', 'is_active')
             ->withTimestamps();
     }
 
@@ -54,7 +54,7 @@ class Store extends Model
         return $this->belongsToMany(Product::class, 'product_store')
             ->wherePivot('is_sellable', true)
             ->wherePivot('is_active', true)
-            ->withPivot('min_stock', 'max_stock')
+            ->withPivot('stock_quantity', 'reserved_stock', 'damaged_stock', 'blocked_stock', 'min_stock', 'max_stock')
             ->withTimestamps();
     }
 
@@ -71,6 +71,11 @@ class Store extends Model
     public function rootLocations()
     {
         return $this->hasMany(Location::class)->whereNull('parent_id');
+    }
+
+    public function cashRegisters()
+    {
+        return $this->hasMany(CashRegister::class);
     }
 
     public static function fullTree(int $companyId): Collection

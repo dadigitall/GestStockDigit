@@ -12,7 +12,7 @@ class Category extends Model
 
     protected $fillable = [
         'company_id', 'name', 'slug', 'parent_id', 'description',
-        'color', 'is_active',
+        'color', 'is_active', 'margin_rate', 'min_margin', 'stock_threshold',
     ];
 
     public function company()

@@ -80,7 +80,20 @@ new class extends Component
                     <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
                 </svg>
             </x-slot>
-            Ventes
+            Point de vente
+        </x-nav-link-sidebar>
+
+        <x-nav-link-sidebar :href="route('wholesale.index')" :active="request()->routeIs('wholesale.*')" wire:navigate>
+            <x-slot:icon>
+                <svg class="lucide lucide-package-plus w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 16h6" /><path d="M19 13v6" />
+                    <path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" />
+                    <path d="M12 22V12" />
+                    <path d="m3.29 7 8.71 5 8.71-5" />
+                    <path d="M7.5 4.27 16 9.42" />
+                </svg>
+            </x-slot>
+            Ventes en gros
         </x-nav-link-sidebar>
 
         <x-nav-link-sidebar :href="route('stock.index')" :active="request()->routeIs('stock.*')" wire:navigate>
@@ -92,7 +105,49 @@ new class extends Component
                     <path d="m7.5 4.27 9 5.15" />
                 </svg>
             </x-slot>
-            Inventaire
+            Stocks
+        </x-nav-link-sidebar>
+
+        <x-nav-link-sidebar :href="route('transfers.index')" :active="request()->routeIs('transfers.*')" wire:navigate>
+            <x-slot:icon>
+                <svg class="lucide lucide-arrow-left-right w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 7H3" /><path d="M13 3l4 4-4 4" /><path d="M7 17h14" /><path d="M11 21l-4-4 4-4" />
+                </svg>
+            </x-slot>
+            Transferts
+        </x-nav-link-sidebar>
+
+        <x-nav-link-sidebar :href="route('cash-registers.index')" :active="request()->routeIs('cash-registers.*')" wire:navigate>
+            <x-slot:icon>
+                <svg class="lucide lucide-banknote w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="6" width="20" height="12" rx="2" /><circle cx="12" cy="12" r="2" /><path d="M6 12h.01M18 12h.01" />
+                </svg>
+            </x-slot>
+            Caisses
+        </x-nav-link-sidebar>
+
+        <x-nav-link-sidebar :href="route('inventories.index')" :active="request()->routeIs('inventories.*')" wire:navigate>
+            <x-slot:icon>
+                <svg class="lucide lucide-clipboard-list w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="8" y="2" width="8" height="4" rx="1" />
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                    <path d="M12 11h4" />
+                    <path d="M12 16h4" />
+                    <path d="M8 11h.01" />
+                    <path d="M8 16h.01" />
+                </svg>
+            </x-slot>
+            Inventaires
+        </x-nav-link-sidebar>
+
+        <x-nav-link-sidebar :href="route('stock-losses.index')" :active="request()->routeIs('stock-losses.*')" wire:navigate>
+            <x-slot:icon>
+                <svg class="lucide lucide-alert-triangle w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                    <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+            </x-slot>
+            Pertes et casses
         </x-nav-link-sidebar>
 
         <x-nav-link-sidebar :href="route('magasins.index')" :active="request()->routeIs('magasins.*')" wire:navigate>
@@ -142,6 +197,17 @@ new class extends Component
             Clients
         </x-nav-link-sidebar>
 
+        <x-nav-link-sidebar :href="route('purchases.index')" :active="request()->routeIs('purchases.*')" wire:navigate>
+            <x-slot:icon>
+                <svg class="lucide lucide-shopping-bag w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+                    <path d="M3 6h18" />
+                    <path d="M16 10a4 4 0 0 1-8 0" />
+                </svg>
+            </x-slot>
+            Achats
+        </x-nav-link-sidebar>
+
         <x-nav-link-sidebar :href="route('invoices.index')" :active="request()->routeIs('invoices.*')" wire:navigate>
             <x-slot:icon>
                 <svg class="lucide lucide-file-text w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -155,6 +221,82 @@ new class extends Component
             Facturation
         </x-nav-link-sidebar>
 
+        <x-nav-link-sidebar :href="route('quotations.index')" :active="request()->routeIs('quotations.*')" wire:navigate>
+            <x-slot:icon>
+                <svg class="lucide lucide-file-text w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10 9 9 9 8 9"/>
+                </svg>
+            </x-slot>
+            Devis
+        </x-nav-link-sidebar>
+
+        <x-nav-link-sidebar :href="route('delivery-notes.index')" :active="request()->routeIs('delivery-notes.*')" wire:navigate>
+            <x-slot:icon>
+                <svg class="lucide lucide-truck w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>
+                </svg>
+            </x-slot>
+            Bons de livraison
+        </x-nav-link-sidebar>
+
+        <x-nav-link-sidebar :href="route('document-templates.index')" :active="request()->routeIs('document-templates.*')" wire:navigate>
+            <x-slot:icon>
+                <svg class="lucide lucide-file-plus w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M15 18H9"/><path d="M12 15v6"/><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/>
+                </svg>
+            </x-slot>
+            Modèles de documents
+        </x-nav-link-sidebar>
+
+        <x-nav-link-sidebar :href="route('customer-orders.index')" :active="request()->routeIs('customer-orders.*')" wire:navigate>
+            <x-slot:icon>
+                <svg class="lucide lucide-clipboard-list w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/>
+                </svg>
+            </x-slot>
+            Commandes clients
+        </x-nav-link-sidebar>
+
+        <x-nav-link-sidebar :href="route('customer-returns.index')" :active="request()->routeIs('customer-returns.*')" wire:navigate>
+            <x-slot:icon>
+                <svg class="lucide lucide-undo-2 w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11"/>
+                </svg>
+            </x-slot>
+            Retours clients
+        </x-nav-link-sidebar>
+
+        <x-nav-link-sidebar :href="route('price-tiers.index')" :active="request()->routeIs('price-tiers.*')" wire:navigate>
+            <x-slot:icon>
+                <svg class="lucide lucide-credit-card w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>
+                </svg>
+            </x-slot>
+            Grilles de prix
+        </x-nav-link-sidebar>
+
+        <x-nav-link-sidebar :href="route('promotions.index')" :active="request()->routeIs('promotions.*')" wire:navigate>
+            <x-slot:icon>
+                <svg class="lucide lucide-tag w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2H2v10l9.29 9.29a2 2 0 0 0 2.83 0l8.17-8.17a2 2 0 0 0 0-2.83L12 2z"/><path d="M7 7h.01"/>
+                </svg>
+            </x-slot>
+            Promotions
+        </x-nav-link-sidebar>
+
+        <x-nav-link-sidebar :href="route('coupons.index')" :active="request()->routeIs('coupons.*')" wire:navigate>
+            <x-slot:icon>
+                <svg class="lucide lucide-percent w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>
+                </svg>
+            </x-slot>
+            Coupons
+        </x-nav-link-sidebar>
+
         <x-nav-link-sidebar :href="route('reports.index')" :active="request()->routeIs('reports.*')" wire:navigate>
             <x-slot:icon>
                 <svg class="lucide lucide-chart-column w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -165,6 +307,48 @@ new class extends Component
                 </svg>
             </x-slot>
             Rapports
+        </x-nav-link-sidebar>
+
+        <x-nav-link-sidebar :href="route('imports.index')" :active="request()->routeIs('imports.*')" wire:navigate>
+            <x-slot:icon>
+                <svg class="lucide lucide-upload w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="17 8 12 3 7 8" />
+                    <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+            </x-slot>
+            Import de données
+        </x-nav-link-sidebar>
+
+        <x-nav-link-sidebar :href="route('exports.index')" :active="request()->routeIs('exports.*')" wire:navigate>
+            <x-slot:icon>
+                <svg class="lucide lucide-download w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+            </x-slot>
+            Export de données
+        </x-nav-link-sidebar>
+
+        <x-nav-link-sidebar :href="route('alerts.index')" :active="request()->routeIs('alerts.*')" wire:navigate>
+            <x-slot:icon>
+                <svg class="lucide lucide-bell w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.268 21a2 2 0 0 0 3.464 0" />
+                    <path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" />
+                </svg>
+            </x-slot>
+            <div class="flex items-center justify-between w-full">
+                <span>Alertes</span>
+                @php
+                    $alertCount = auth()->check()
+                        ? \App\Models\Alert::forUser(auth()->id(), auth()->user()->company_id)->whereNull('read_at')->count()
+                        : 0;
+                @endphp
+                @if($alertCount > 0)
+                    <span class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[10px] font-bold text-white bg-red-500 rounded-full">{{ $alertCount > 99 ? '99+' : $alertCount }}</span>
+                @endif
+            </div>
         </x-nav-link-sidebar>
 
         <x-nav-link-sidebar :href="route('users.index')" :active="request()->routeIs('users.*')" wire:navigate>
@@ -188,6 +372,16 @@ new class extends Component
             Rôles & Permissions
         </x-nav-link-sidebar>
 
+        <x-nav-link-sidebar :href="route('audit-logs.index')" :active="request()->routeIs('audit-logs.*')" wire:navigate>
+            <x-slot:icon>
+                <svg class="lucide lucide-scroll-text w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 12h-5" /><path d="M15 8h-5" /><path d="M19 17V5a2 2 0 0 0-2-2H4" />
+                    <path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2 0h12" />
+                </svg>
+            </x-slot>
+            Journal d'audit
+        </x-nav-link-sidebar>
+
         <div class="text-[10px] uppercase tracking-widest text-slate-400 px-3 mb-2 mt-6 font-semibold">Système</div>
 
         @can('manage companies')
@@ -206,6 +400,25 @@ new class extends Component
                 Entreprises
             </x-nav-link-sidebar>
         @endcan
+
+        <x-nav-link-sidebar :href="route('units.index')" :active="request()->routeIs('units.*')" wire:navigate>
+            <x-slot:icon>
+                <svg class="lucide lucide-ruler w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z" />
+                    <path d="M10 2v2.5" />
+                    <path d="M14 2v2.5" />
+                    <path d="M10 18.5V22" />
+                    <path d="M14 18.5V22" />
+                    <path d="M6 8h.01" />
+                    <path d="M6 12h.01" />
+                    <path d="M6 16h.01" />
+                    <path d="M18 8h.01" />
+                    <path d="M18 12h.01" />
+                    <path d="M18 16h.01" />
+                </svg>
+            </x-slot>
+            Unités
+        </x-nav-link-sidebar>
 
         <x-nav-link-sidebar :href="route('settings.index')" :active="request()->routeIs('settings.*')" wire:navigate>
             <x-slot:icon>

@@ -44,5 +44,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $admin->assignRole('Super Admin');
+
+        $this->call(UnitSeeder::class);
+        $this->call(CustomerCategorySeeder::class);
     }
 }

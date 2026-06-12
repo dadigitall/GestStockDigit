@@ -25,12 +25,16 @@ class RoleAndPermissionSeeder extends Seeder
             'view suppliers', 'create suppliers', 'edit suppliers', 'delete suppliers',
             'view transfers', 'create transfers', 'approve transfers',
             'view inventory', 'create inventory', 'validate inventory',
+            'view stock losses', 'create stock losses', 'approve stock losses',
             'view cash register', 'manage cash register', 'close cash register',
             'view reports', 'export reports',
             'view financial reports', 'view margins',
             'manage users', 'manage roles', 'manage settings',
             'manage companies',
             'view audit log',
+            'view price tiers', 'create price tiers', 'edit price tiers', 'delete price tiers',
+            'view promotions', 'create promotions', 'edit promotions', 'delete promotions',
+            'view coupons', 'create coupons', 'edit coupons', 'delete coupons',
         ];
 
         foreach ($permissions as $permission) {
@@ -47,6 +51,10 @@ class RoleAndPermissionSeeder extends Seeder
                 'view customers', 'create customers', 'edit customers',
                 'view transfers', 'create transfers',
                 'view inventory', 'create inventory',
+                'view stock losses', 'create stock losses', 'approve stock losses',
+                'view price tiers', 'create price tiers', 'edit price tiers', 'delete price tiers',
+                'view promotions', 'create promotions', 'edit promotions', 'delete promotions',
+                'view coupons', 'create coupons', 'edit coupons', 'delete coupons',
                 'view cash register', 'manage cash register', 'close cash register',
                 'view reports', 'export reports',
             ],
@@ -57,6 +65,7 @@ class RoleAndPermissionSeeder extends Seeder
                 'view suppliers',
                 'view transfers', 'create transfers', 'approve transfers',
                 'view inventory', 'create inventory', 'validate inventory',
+                'view stock losses', 'create stock losses', 'approve stock losses',
                 'view reports',
             ],
             'Cashier' => [
@@ -79,6 +88,7 @@ class RoleAndPermissionSeeder extends Seeder
                 'view stock', 'create stock movements', 'adjust stock',
                 'view transfers', 'create transfers',
                 'view inventory', 'create inventory',
+                'view stock losses', 'create stock losses',
                 'view suppliers',
                 'view reports', 'export reports',
             ],
