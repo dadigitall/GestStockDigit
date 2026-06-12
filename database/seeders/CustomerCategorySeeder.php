@@ -28,7 +28,10 @@ class CustomerCategorySeeder extends Seeder
         ];
 
         foreach ($categories as $cat) {
-            CustomerCategory::create(array_merge($cat, ['company_id' => $companyId]));
+            CustomerCategory::firstOrCreate(
+                ['company_id' => $companyId, 'slug' => $cat['slug']],
+                array_merge($cat, ['company_id' => $companyId])
+            );
         }
     }
 }

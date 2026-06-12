@@ -31,7 +31,10 @@ class UnitSeeder extends Seeder
 
         if ($companyId) {
             foreach ($units as $unit) {
-                Unit::create(array_merge($unit, ['company_id' => $companyId, 'type' => 'standard']));
+                Unit::firstOrCreate(
+                    ['company_id' => $companyId, 'slug' => $unit['slug']],
+                    array_merge($unit, ['company_id' => $companyId, 'type' => 'standard'])
+                );
             }
         }
     }
