@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Invoice;
+use App\Observers\EmecfInvoiceObserver;
 use App\Models\PurchaseOrder;
 use App\Models\Sale;
 use App\Models\Supplier;
@@ -39,6 +40,9 @@ class AppServiceProvider extends ServiceProvider
         Invoice::observe(AuditObserver::class);
         User::observe(AuditObserver::class);
         Role::observe(AuditObserver::class);
+
+        // Auto-sync new invoices to e-MECeF
+        Invoice::observe(EmecfInvoiceObserver::class);
 
         Event::listen(function (Login $event) {
             if ($event->user instanceof User) {

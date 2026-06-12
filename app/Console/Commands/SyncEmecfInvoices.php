@@ -41,7 +41,8 @@ class SyncEmecfInvoices extends Command
             return Command::FAILURE;
         }
 
-        $this->line("Facture #{$invoice->id}: {$invoice->reference} ({$invoice->customer?->name ?? 'N/A'})");
+        $customerName = $invoice->customer?->name ?? 'N/A';
+        $this->line("Facture #{$invoice->id}: {$invoice->reference} ({$customerName})");
 
         if ($invoice->isEmecfSynced()) {
             $this->warn('  Déjà synchronisée.');
@@ -91,7 +92,8 @@ class SyncEmecfInvoices extends Command
             $this->warn('--- MODE DRY-RUN --- Aucun appel API effectué ---');
             foreach ($invoices as $invoice) {
                 $status = $invoice->isEmecfSynced() ? '✅ déjà synchro' : '⏳ en attente';
-                $this->line("  #{$invoice->id} {$invoice->reference} — {$invoice->customer?->name} [{$status}]");
+                $custName = $invoice->customer?->name ?? 'N/A';
+                $this->line("  #{$invoice->id} {$invoice->reference} — {$custName} [{$status}]");
             }
             $this->warn('--- FIN DRY-RUN ---');
             return Command::SUCCESS;
@@ -101,7 +103,8 @@ class SyncEmecfInvoices extends Command
         $failed = 0;
 
         foreach ($invoices as $invoice) {
-            $this->line("  #{$invoice->id} {$invoice->reference} — {$invoice->customer?->name ?? 'N/A'}...");
+            $cName = $invoice->customer?->name ?? 'N/A';
+            $this->line("  #{$invoice->id} {$invoice->reference} — {$cName}...");
 
             $result = $syncService->syncInvoice($invoice);
 
