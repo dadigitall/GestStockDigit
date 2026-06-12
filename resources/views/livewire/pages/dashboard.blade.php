@@ -113,7 +113,7 @@
                                 <span class="font-medium text-gray-900 dark:text-white">{{ number_format($s['amount'], 0, ',', ' ') }} F</span>
                             </div>
                             <div class="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2">
-                                @php $pct = max($salesByStore, fn($a) => $a['amount'])['amount'] ?? 1; @endphp
+                                @php $pct = collect($salesByStore)->max('amount') ?: 1; @endphp
                                 <div class="bg-indigo-500 h-2 rounded-full transition-all" style="width: {{ $pct > 0 ? ($s['amount'] / $pct) * 100 : 0 }}%"></div>
                             </div>
                             <p class="text-xs text-gray-400 mt-0.5">{{ $s['total'] }} vente(s)</p>

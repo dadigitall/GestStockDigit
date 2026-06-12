@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ab249e0115e12c729b09da54a3963cd6",
+    "content-hash": "6cd1ea7900cf86bd24f09b1122357c7f",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -211,6 +211,69 @@
                 }
             ],
             "time": "2024-02-09T16:56:22+00:00"
+        },
+        {
+            "name": "codianselme/lara-sygmef",
+            "version": "1.0.5",
+            "dist": {
+                "type": "path",
+                "url": "packages/lara-sygmef",
+                "reference": "6b4a588fafdafaa2120d3b33aa9c321d867cb79c"
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.0",
+                "illuminate/support": "^7.0|^8.0|^9.0|^10.0|^11.0|^12.0|^13.0",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^7.0|^8.0",
+                "phpunit/phpunit": "^9.0|^10.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Codianselme\\LaraSygmef\\Providers\\EmecfServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Codianselme\\LaraSygmef\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Codianselme\\LaraSygmef\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "vendor/bin/phpunit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Anselme",
+                    "email": "codianselme@gmail.com"
+                }
+            ],
+            "description": "Service e-MECeF pour Laravel - Intégration API DGI Bénin",
+            "keywords": [
+                "benin",
+                "dgi",
+                "emecf",
+                "invoice",
+                "laravel",
+                "tax"
+            ],
+            "transport-options": {
+                "symlink": false,
+                "relative": true
+            }
         },
         {
             "name": "composer/pcre",
@@ -10740,7 +10803,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "codianselme/lara-sygmef": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

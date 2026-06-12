@@ -15,6 +15,8 @@ class Invoice extends Model
         'subtotal', 'tax_amount', 'discount', 'total',
         'paid_amount', 'amount_due',
         'issue_date', 'due_date', 'payment_terms', 'notes', 'paid_at',
+        'emecf_invoice_id', 'emecf_uid', 'emecf_code', 'emecf_qr_code',
+        'emecf_status', 'emecf_sent_at',
     ];
 
     protected function casts(): array
@@ -29,6 +31,7 @@ class Invoice extends Model
             'issue_date' => 'date',
             'due_date' => 'date',
             'paid_at' => 'datetime',
+            'emecf_sent_at' => 'datetime',
         ];
     }
 
@@ -65,6 +68,24 @@ class Invoice extends Model
     public function sale()
     {
         return $this->belongsTo(Sale::class, 'sale_id');
+    }
+
+    public function emecfInvoice()
+    {
+        return $this->belongsTo(\Codianselme\LaraSygmef\Models\EmecfInvoice::class, 'emecf_invoice_id');
+    }
+
+    public function isEmecfSynced(): bool
+    {
+        return $this->emecf_status === 'confirmed';
+    }
+
+    public function getEmecfUrlAttribute(): ?string
+    {
+        if ($this->emecf_uid) {
+            return url("/emecf/invoices/{$this->emecf_invoice_id}");
+        }
+        return null;
     }
 
     public static function generateReference(): string

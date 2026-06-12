@@ -116,7 +116,38 @@
                         <div class="flex justify-between text-red-600 font-medium"><span>Reste dû</span><span>{{ number_format($detail->amount_due, 0, ',', ' ') }} F</span></div>
                     @endif
                 </div>
-            </div>
+            </div>                            @if($detail->emecf_status)
+                <div class="mt-6 p-4 rounded-lg text-sm border
+                    {{ $detail->emecf_status === 'confirmed' ? 'bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-800' : '' }}
+                    {{ $detail->emecf_status === 'pending' ? 'bg-amber-50 dark:bg-amber-900/30 border-amber-200 dark:border-amber-800' : '' }}">
+                    <div class="flex items-center gap-2 mb-2">
+                        <svg class="w-5 h-5 {{ $detail->emecf_status === 'confirmed' ? 'text-emerald-600' : 'text-amber-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                        <span class="font-semibold {{ $detail->emecf_status === 'confirmed' ? 'text-emerald-700 dark:text-emerald-300' : 'text-amber-700 dark:text-amber-300' }}">
+                            e-MECeF — {{ $detail->emecf_status === 'confirmed' ? 'Synchronisée' : 'En attente de confirmation' }}
+                        </span>
+                    </div>
+                    @if($detail->emecf_code)
+                        <p class="{{ $detail->emecf_status === 'confirmed' ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400' }}">
+                            <span class="font-medium">Code MECeF/DGI :</span> {{ $detail->emecf_code }}
+                        </p>
+                    @endif
+                    @if($detail->emecf_sent_at)
+                        <p class="text-xs mt-1 {{ $detail->emecf_status === 'confirmed' ? 'text-emerald-500' : 'text-amber-500' }}">
+                            Envoyée le {{ $detail->emecf_sent_at->format('d/m/Y à H:i') }}
+                        </p>
+                    @endif
+                    @if($detail->emecf_qr_code)
+                        <div class="mt-2">
+                            <a href="{{ $detail->emecf_qr_code }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                                Vérifier sur Sygmef
+                            </a>
+                        </div>
+                    @endif
+                </div>
+            @endif
 
             @if($detail->payment_terms || $detail->notes)
                 <div class="mt-6 p-4 bg-gray-50 dark:bg-gray-700/30 rounded-lg text-sm text-gray-600 dark:text-gray-400">
@@ -134,6 +165,18 @@
                 @if(in_array($detail->status, ['sent', 'partially_paid', 'overdue']))
                     <button wire:click="markPaid({{ $detail->id }})" class="px-3 py-1.5 text-sm font-medium text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-lg">Marquer payée</button>
                     <button wire:click="recordPayment({{ $detail->id }})" class="px-3 py-1.5 text-sm font-medium text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/30 rounded-lg">Enregistrer paiement</button>
+                @endif
+                @if(!$detail->isEmecfSynced() && $detail->sale_id)
+                    <button wire:click="syncToEmecf" class="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 rounded-lg">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                        Envoyer à e-MECeF
+                    </button>
+                @endif
+                @if($detail->emecf_code && $detail->emecf_invoice_id)
+                    <a href="{{ url('/emecf/invoices/' . $detail->emecf_invoice_id) }}" target="_blank" class="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                        Voir sur e-MECeF
+                    </a>
                 @endif
                 @if($detail->status === 'draft')
                     <button wire:click="delete({{ $detail->id }})" class="px-3 py-1.5 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg" onclick="return confirm('Supprimer cette facture ?')">Supprimer</button>

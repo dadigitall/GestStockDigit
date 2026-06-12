@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Product;
+use App\Services\EmecfSyncService;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -412,6 +413,36 @@ class Index extends Component
         $this->detailId = $id;
         $this->showDetail = true;
         $this->showForm = false;
+    }
+
+    public function syncToEmecf(EmecfSyncService $syncService)
+    {
+        if (!$this->detailId) {
+            session()->flash('error', 'Aucune facture sélectionnée.');
+            return;
+        }
+
+        $invoice = Invoice::with(['items', 'customer', 'sale', 'user'])
+            ->where('company_id', auth()->user()->company_id)
+            ->find($this->detailId);
+
+        if (!$invoice) {
+            session()->flash('error', 'Facture introuvable.');
+            return;
+        }
+
+        if ($invoice->isEmecfSynced()) {
+            session()->flash('message', 'Facture déjà synchronisée avec e-MECeF.');
+            return;
+        }
+
+        $result = $syncService->syncInvoice($invoice);
+
+        if ($result['success']) {
+            session()->flash('message', '✅ ' . $result['message']);
+        } else {
+            session()->flash('error', '❌ ' . $result['message']);
+        }
     }
 
     public function render()

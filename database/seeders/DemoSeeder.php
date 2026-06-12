@@ -112,6 +112,7 @@ class DemoSeeder extends Seeder
         $this->seedCustomerOrders();
         $this->seedSales();
         $this->seedInvoices();
+        $this->seedEmecfInvoices();
         $this->seedDeliveryNotes();
         $this->seedTransfers();
         $this->seedCustomerReturns();
@@ -2143,6 +2144,42 @@ class DemoSeeder extends Seeder
                 'sold_at' => $s['sold_at'] ?? null,
                 'warranty_expiry' => isset($s['sold_at']) ? $s['sold_at']->addYear() : null,
             ]);
+        }
+    }
+
+    // ─── E-MECEF INVOICES ──────────────────────
+    private function seedEmecfInvoices(): void
+    {
+        if (Invoice::where('company_id', $this->companyId)->whereNotNull('emecf_status')->exists()) {
+            return;
+        }
+
+        // For demo, simulate e-MECeF sync for wholesale invoices
+        $wholesaleInvoices = Invoice::where('company_id', $this->companyId)
+            ->whereHas('sale', function ($q) { $q->where('type', 'wholesale'); })
+            ->take(2)
+            ->get();
+
+        $fakeCodes = ['TESTJKLKV6722QZNX2U6PO', 'TESTMNOPQR7890ABCDEFGH'];
+        $fakeQrs = [
+            'https://sygmef.impots.bj/emcf/verify/TESTJKLKV6722QZNX2U6PO',
+            'https://sygmef.impots.bj/emcf/verify/TESTMNOPQR7890ABCDEFGH',
+        ];
+
+        foreach ($wholesaleInvoices as $i => $invoice) {
+            $code = $fakeCodes[$i] ?? 'TEST' . strtoupper(substr(md5(uniqid()), 0, 20));
+            $invoice->update([
+                'emecf_uid' => 'UID-' . strtoupper(substr(md5(uniqid()), 0, 16)),
+                'emecf_code' => $code,
+                'emecf_qr_code' => $fakeQrs[$i] ?? null,
+                'emecf_status' => 'confirmed',
+                'emecf_sent_at' => now()->subDays(rand(1, 5)),
+            ]);
+        }
+
+        $count = $wholesaleInvoices->count();
+        if ($count > 0) {
+            $this->command->line("   📄 $count facture(s) marquee(s) comme synchronisees e-MECeF");
         }
     }
 }

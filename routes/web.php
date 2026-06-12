@@ -77,3 +77,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+// e-MECeF Dashboard routes (protected by auth)
+Route::middleware(['auth', 'verified'])->group(function () {
+    require __DIR__.'/dashboard.php';
+});
