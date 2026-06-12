@@ -6,7 +6,7 @@ use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Product;
-use App\Services\EmecfSyncService;
+use App\Jobs\SyncInvoiceToEmecf;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -24,6 +24,12 @@ class Index extends Component
     public string $filterType = '';
 
     public bool $showForm = false;
+
+    public bool $syncingToEmecf = false;
+
+    public int $emecfPollAttempts = 0;
+
+    public const MAX_EMECF_POLLS = 10;
 
     public $editId = null;
 
@@ -415,15 +421,14 @@ class Index extends Component
         $this->showForm = false;
     }
 
-    public function syncToEmecf(EmecfSyncService $syncService)
+    public function syncToEmecf()
     {
         if (!$this->detailId) {
             session()->flash('error', 'Aucune facture sélectionnée.');
             return;
         }
 
-        $invoice = Invoice::with(['items', 'customer', 'sale', 'user'])
-            ->where('company_id', auth()->user()->company_id)
+        $invoice = Invoice::where('company_id', auth()->user()->company_id)
             ->find($this->detailId);
 
         if (!$invoice) {
@@ -436,12 +441,46 @@ class Index extends Component
             return;
         }
 
-        $result = $syncService->syncInvoice($invoice);
+        SyncInvoiceToEmecf::dispatch($invoice->id);
 
-        if ($result['success']) {
-            session()->flash('message', '✅ ' . $result['message']);
-        } else {
-            session()->flash('error', '❌ ' . $result['message']);
+        $this->syncingToEmecf = true;
+        $this->emecfPollAttempts = 0;
+
+        session()->flash('message', '⏳ Synchronisation e-MECeF lancée en arrière-plan...');
+    }
+
+    /**
+     * Polling method: refresh detail data while waiting for e-MECeF sync to complete.
+     * Polls every 3 seconds, stops after ~30s timeout.
+     */
+    public function checkEmecfSyncStatus(): void
+    {
+        if (!$this->syncingToEmecf || !$this->detailId) {
+            return;
+        }
+
+        $this->emecfPollAttempts++;
+
+        // Timeout after MAX_EMECF_POLLS attempts (~30s)
+        if ($this->emecfPollAttempts >= self::MAX_EMECF_POLLS) {
+            $this->syncingToEmecf = false;
+            session()->flash('error', '⚠️ La synchronisation e-MECeF a pris plus de temps que prévu. Vérifiez les logs.');
+            return;
+        }
+
+        // Re-fetch the invoice to check if emecf_status changed
+        $invoice = Invoice::where('company_id', auth()->user()->company_id)
+            ->find($this->detailId);
+
+        if (!$invoice) {
+            return;
+        }
+
+        // If the sync completed (or got a status), stop polling and show success
+        if ($invoice->emecf_status !== null) {
+            $this->syncingToEmecf = false;
+            $status = $invoice->emecf_status === 'confirmed' ? '✅' : '⚠️';
+            session()->flash('message', "{$status} Synchronisation e-MECeF terminée (statut : {$invoice->emecf_status}).");
         }
     }
 
